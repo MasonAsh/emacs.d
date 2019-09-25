@@ -122,7 +122,8 @@
   :ensure t
   :after general
   :config
-  (projectile-mode))
+  (projectile-mode)
+  (add-to-list 'projectile-globally-ignored-directories ".ccls-cache"))
 
 (defun contextual-find-file ()
   (interactive)
@@ -147,6 +148,43 @@
   :ensure t
   :config
   (global-evil-surround-mode 1))
+
+(use-package irony
+  :ensure t
+  :config
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+(use-package company
+  :ensure t
+  :config
+  (global-company-mode))
+
+(use-package rtags
+  :ensure t
+  :after 'company
+  :config
+  (setq rtags-completions-enabled t)
+  (push 'copmany-rtags company-backends)
+  (setq rtags-display-result-backend 'helm))
+
+(global-flycheck-mode)
+
+(use-package flycheck-rtags
+  :ensure t
+  :after 'rtags
+  :config
+  (defun my-flycheck-rtags-setup ()
+    (flycheck-select-checker 'rtags)
+    (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
+    (setq-local flycheck-check-syntax-automatically nil))
+  (add-hook 'c-mode-hook #'my-flycheck-rtags-setup)
+  (add-hook 'c++-mode-hook #'my-flycheck-rtags-setup)
+  (add-hook 'objc-mode-hook #'my-flycheck-rtags-setup))
+
+; (global-whitespace-mode 1)
 
 (setq ring-bell-function 'ignore)
 
