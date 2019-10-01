@@ -44,7 +44,7 @@
   (evil-define-key nil evil-normal-state-map (kbd "SPC RET") 'evil-ex-nohighlight))
 
 (use-package evil-collection
-  :after evil
+  :after evil magit
   :ensure t
   :config
   (delete 'comint evil-collection-mode-list)
@@ -184,6 +184,28 @@
   (add-hook 'c++-mode-hook #'my-flycheck-rtags-setup)
   (add-hook 'objc-mode-hook #'my-flycheck-rtags-setup))
 
+(use-package multi-line
+  :after general
+  :ensure t
+  :config
+  (general-define-key
+   :states 'normal
+   "gS" 'multi-line)
+  (setq-default multi-line-current-strategy
+              (multi-line-strategy
+               :respace (multi-line-default-respacers
+                         (make-instance 'multi-line-always-newline)))))
+
+(use-package rust-mode
+  :ensure t)
+
+(use-package magit
+  :ensure t)
+
+(use-package evil-magit
+  :ensure t
+  :after magit)
+
 ; (global-whitespace-mode 1)
 
 (setq ring-bell-function 'ignore)
@@ -214,6 +236,10 @@
 (setq backup-by-copying t)
 
 (desktop-save-mode 1)
+
+(require 'display-line-numbers)
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)

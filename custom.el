@@ -13,7 +13,10 @@
 		 ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(package-selected-packages
    (quote
-    (flycheck-rtags rtags use-package key-chord irony intero helm-projectile general evil-surround evil-exchange evil-easymotion evil-collection))))
+    (evil-magit magit rust-mode multi-line flycheck-rtags rtags use-package key-chord irony intero helm-projectile general evil-surround evil-exchange evil-easymotion evil-collection)))
+ '(whitespace-style
+   (quote
+    (face trailing tabs empty indentation::space space-after-tab space-before-tab tab-mark))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
