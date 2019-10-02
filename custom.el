@@ -13,7 +13,7 @@
 		 ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(package-selected-packages
    (quote
-    (evil-magit magit rust-mode multi-line flycheck-rtags rtags use-package key-chord irony intero helm-projectile general evil-surround evil-exchange evil-easymotion evil-collection)))
+    (company-quickhelp yasnippet-snippets evil-magit magit rust-mode multi-line flycheck-rtags rtags use-package key-chord irony intero helm-projectile general evil-surround evil-exchange evil-easymotion evil-collection)))
  '(whitespace-style
    (quote
     (face trailing tabs empty indentation::space space-after-tab space-before-tab tab-mark))))

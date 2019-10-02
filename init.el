@@ -14,11 +14,12 @@
 (defvar global-evil-keys-map (make-sparse-keymap) "Stop overriding my globals!!")
 (define-minor-mode global-evil-keys
   :init-value t
+  :global
   :lighter " global-evil-keys"
   :keymap global-evil-keys-map)
 (define-globalized-minor-mode global-evil-keys-mode global-evil-keys global-evil-keys)
 
-(global-evil-keys-mode 1)
+(global-evil-keys-mode)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -39,13 +40,18 @@
   :config
   (evil-mode)
   (evil-define-key nil evil-normal-state-map (kbd "SPC f") 'find-file)
-  (evil-define-key nil evil-normal-state-map (kbd "SPC b") 'switch-to-buffer)
+  ;; (evil-define-key nil evil-normal-state-map (kbd "SPC b") 'switch-to-buffer)
   (evil-define-key nil evil-visual-state-map (kbd "C-/") 'comment-dwim)
-  (evil-define-key nil evil-normal-state-map (kbd "SPC RET") 'evil-ex-nohighlight))
+  (evil-define-key nil evil-normal-state-map (kbd "SPC RET") 'evil-ex-nohighlight)
+  (dolist (state '(normal visual insert))
+  (evil-make-intercept-map
+   (evil-get-auxiliary-keymap global-evil-keys-map state t t)
+   state)))
 
 (use-package evil-collection
   :after evil magit
   :ensure t
+  :custom (evil-collection-setup-minibuffer t)
   :config
   (delete 'comint evil-collection-mode-list)
   (delete 'term evil-collection-mode-list)
@@ -73,20 +79,24 @@
   :config
   (general-define-key
    :states 'motion
-   :keymaps 'override
-   "C-k" 'windmove-up)
-  (general-define-key
-   :states 'motion
-   :keymaps 'override
+   :keymaps 'global-evil-keys-map
    "C-j" 'windmove-down)
   (general-define-key
    :states 'motion
-   :keymaps 'override
+   :keymaps 'global-evil-keys-map
+   "C-k" 'windmove-up)
+  (general-define-key
+   :states 'motion
+   :keymaps 'global-evil-keys-map
    "C-h" 'windmove-left)
   (general-define-key
    :states 'motion
-   :keymaps 'override
-   "C-l" 'windmove-right))
+   :keymaps 'global-evil-keys-map
+   "C-l" 'windmove-right)
+  (general-create-definer leader-key-def
+    :states '(normal motion emacs)
+    :keymap 'global-evil-keys
+    :prefix "SPC"))
 
 (use-package haskell-mode
   :ensure t
@@ -116,6 +126,7 @@
   ;;  "SPC f" 'helm-find-files)
   (general-define-key
    :states 'normal
+   :keymaps 'global-evil-keys-map
    "SPC b" 'helm-buffers-list))
 
 (use-package projectile
@@ -137,6 +148,7 @@
   :config
   (general-define-key
    :states 'normal
+   :keymap 'global-evil-keys-map
    "SPC f" 'contextual-find-file))
 
 (use-package evil-exchange
@@ -161,6 +173,11 @@
   :ensure t
   :config
   (global-company-mode))
+
+(use-package company-quickhelp
+  :ensure t
+  :config
+  (company-quickhelp-mode))
 
 (use-package rtags
   :ensure t
@@ -206,7 +223,19 @@
   :ensure t
   :after magit)
 
-; (global-whitespace-mode 1)
+(use-package yasnippet
+  :ensure t
+  :after general
+  :config
+  (yas-reload-all)
+  (general-define-key
+   :states 'insert
+   "TAB" 'yas-maybe-expand)
+  (yas-global-mode 1))
+
+(use-package yasnippet-snippets
+  :ensure t
+  :after yasnippet)
 
 (setq ring-bell-function 'ignore)
 
