@@ -148,7 +148,7 @@
   :config
   (general-define-key
    :states 'normal
-   :keymap 'global-evil-keys-map
+   :keymaps 'global-evil-keys-map
    "SPC f" 'contextual-find-file))
 
 (use-package evil-exchange
