@@ -78,19 +78,19 @@
   :after evil-collection
   :config
   (general-define-key
-   :states 'motion
+   :states '(motion normal)
    :keymaps 'global-evil-keys-map
    "C-j" 'windmove-down)
   (general-define-key
-   :states 'motion
+   :states '(motion normal)
    :keymaps 'global-evil-keys-map
    "C-k" 'windmove-up)
   (general-define-key
-   :states 'motion
+   :states '(motion normal)
    :keymaps 'global-evil-keys-map
    "C-h" 'windmove-left)
   (general-define-key
-   :states 'motion
+   :states '(motion normal)
    :keymaps 'global-evil-keys-map
    "C-l" 'windmove-right)
   (general-create-definer leader-key-def
