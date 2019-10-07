@@ -73,6 +73,14 @@
   (key-chord-define evil-insert-state-map "kj" 'evil-normal-state)
   (key-chord-define evil-normal-state-map "  " evilem-map))
 
+(defvar gdb-default-command-line nil "Default option to pass to gdb.")
+
+(defun compile-and-debug()
+  "Compile and run a program."
+  (interactive)
+  (call-interactively 'recompile)
+  (gdb gdb-default-command-line))
+
 (use-package general
   :ensure t
   :after evil-collection
@@ -93,6 +101,10 @@
    :states '(motion normal)
    :keymaps 'global-evil-keys-map
    "C-l" 'windmove-right)
+  (general-define-key
+   :states 'normal
+   :keymaps '(c-mode-map c++-mode-map objc-mode-map)
+   "<f5>" 'compile-and-debug)
   (general-create-definer leader-key-def
     :states '(normal motion emacs)
     :keymap 'global-evil-keys
@@ -266,9 +278,28 @@
 
 (desktop-save-mode 1)
 
+(define-minor-mode org-latex-auto-export-mode
+  "Auto exports to pdf in org-mode when enabled"
+  :init-value nil
+  :lighter "Org Latex Auto Export"
+  :keymap nil
+  :global nil
+  (interactive (list (or current-prefix-arg 'toggle)))
+  (let ((enable
+	 (if (eq arg 'toggle)
+	     (not org-latex-auto-export-mode) ; this is the mode's mode variable
+	   (> (prefix-numeric-value arg) 0))))
+    (if enable
+	(add-hook 'after-save-hook 'org-latex-export-to-pdf nil t)
+      (remove-hook 'after-save-hook 'org-latex-export-to-pdf t))))
+
 (require 'display-line-numbers)
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode)
+
+(add-hook 'term-mode-hook (lambda() display-line-numbers 0))
+
+(defun risky-local-variable-p (sym &optional _ignored) nil)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
