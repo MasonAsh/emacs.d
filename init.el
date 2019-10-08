@@ -295,9 +295,7 @@
 
 (require 'display-line-numbers)
 (setq display-line-numbers-type 'relative)
-(global-display-line-numbers-mode)
-
-(add-hook 'term-mode-hook (lambda() display-line-numbers 0))
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 (defun risky-local-variable-p (sym &optional _ignored) nil)
 
